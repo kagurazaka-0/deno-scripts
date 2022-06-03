@@ -14,27 +14,29 @@ const _packageJsonText = await Deno.readTextFile("./package.json").catch(() => {
   Deno.exit(1)
 })
 
-let result: Deno.ProcessStatus
+type PackageType = "npm" | "yarn"
+const packageType: PackageType = await Deno.readTextFile("./yarn.lock")
+  .then(() => "yarn" as const)
+  .catch(() => "npm" as const)
 
-if ((await Deno.stat("./yarn.lock")).isFile) {
-  console.log("yarn mode")
+let installExecuteResult: Deno.ProcessStatus
 
-  result = await Deno.run({ cmd: ["yarn", "add", "-D", ...PACKAGE_LIST] }).status()
+console.log(`${packageType} mode`)
+if (packageType === "yarn") {
+  installExecuteResult = await Deno.run({ cmd: ["yarn", "add", "-D", ...PACKAGE_LIST] }).status()
 } else {
-  console.log("npm mode")
-
-  result = await Deno.run({ cmd: ["npm", "i", "-D", ...PACKAGE_LIST] }).status()
+  installExecuteResult = await Deno.run({ cmd: ["npm", "i", "-D", ...PACKAGE_LIST] }).status()
 }
 
-if (!result.success) {
+if (!installExecuteResult.success) {
   console.warn("⚠️  install error")
   Deno.exit(1)
 }
 
 await Deno.writeTextFile("./.prettierrc", JSON.stringify(PRETTIER_CONFIG))
 
-await Deno.run({ cmd: `npx prettier --write "*"`.split(" ") }).status()
-await Deno.run({ cmd: `npx prettier --write "**/*"`.split(" ") }).status()
+await Deno.run({ cmd: `npx prettier --write *`.split(" ") }).status()
+await Deno.run({ cmd: `npx prettier --write **/*`.split(" ") }).status()
 
 // TODO npm scriptsに追加
 /*
