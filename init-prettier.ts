@@ -35,8 +35,7 @@ if (!installExecuteResult.success) {
 
 await Deno.writeTextFile("./.prettierrc", JSON.stringify(PRETTIER_CONFIG))
 
-await Deno.run({ cmd: `npx prettier --write *`.split(" ") }).status()
-await Deno.run({ cmd: `npx prettier --write **/*`.split(" ") }).status()
+await Deno.run({ cmd: `npx prettier --write .`.split(" ") }).status()
 
 // TODO npm scriptsに追加
 /*
