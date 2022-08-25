@@ -1,9 +1,5 @@
 interface PackageJSON {
   [x: string]: unknown
-  // name?: string
-  // private?: boolean
-  // version?: string
-  // scripts?: Record<string, unknown>
   dependencies?: Record<string, unknown>
   devDependencies?: Record<string, unknown>
 }
