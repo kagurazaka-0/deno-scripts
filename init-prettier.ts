@@ -58,7 +58,7 @@ module.exports = {
   semi: false,
   printWidth: 120,
   arrowParens: "always",
-  importOrder: ["^~icons", "^[~/]", "^[../]", "^[./]"],
+  importOrder: ["^[~/]", "^[../]", "^[./]"],
   importOrderSeparation: true,
 }
 `
