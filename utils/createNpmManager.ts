@@ -20,17 +20,11 @@ export async function createNpmManager() {
   console.log(`${packageType} mode`)
 
   return {
-    async installPackage(_packages: (string | false)[]) {
-      const packages = _packages.filter((it): it is string => typeof it === "string")
-      let installExecuteResult: Deno.ProcessStatus
-
-      if (packageType === "yarn") {
-        installExecuteResult = await Deno.run({ cmd: ["yarn", "add", "-D", ...packages] }).status()
-      } else {
-        installExecuteResult = await Deno.run({ cmd: ["npm", "i", "-D", ...packages] }).status()
-      }
-
-      if (!installExecuteResult.success) {
+    async installPackage(packagesWithFalsy: (string | false)[]) {
+      const packages = packagesWithFalsy.filter((it): it is string => typeof it === "string")
+      const cmd = packageType === "yarn" ? ["yarn", "add", "-D", ...packages] : ["npm", "i", "-D", ...packages]
+      const result = await Deno.run({ cmd }).status()
+      if (!result.success) {
         console.warn("⚠️  install error")
         Deno.exit(1)
       }
