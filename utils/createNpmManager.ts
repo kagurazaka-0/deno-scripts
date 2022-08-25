@@ -1,8 +1,20 @@
+interface PackageJSON {
+  [x: string]: unknown
+  // name?: string
+  // private?: boolean
+  // version?: string
+  // scripts?: Record<string, unknown>
+  dependencies?: Record<string, unknown>
+  devDependencies?: Record<string, unknown>
+}
+
 export async function createNpmManager() {
-  const _packageJsonText = await Deno.readTextFile("./package.json").catch(() => {
+  const packageJsonText = await Deno.readTextFile("./package.json").catch(() => {
     console.warn("⚠️  package.json is not found.")
     Deno.exit(1)
   })
+
+  const packageJson = JSON.parse(packageJsonText) as PackageJSON
 
   type PackageType = "npm" | "yarn"
   const packageType: PackageType = await Deno.readTextFile("./yarn.lock")
@@ -12,7 +24,8 @@ export async function createNpmManager() {
   console.log(`${packageType} mode`)
 
   return {
-    async installPackage(packages: string[]) {
+    async installPackage(_packages: (string | false)[]) {
+      const packages = _packages.filter((it): it is string => typeof it === "string")
       let installExecuteResult: Deno.ProcessStatus
 
       if (packageType === "yarn") {
@@ -25,6 +38,9 @@ export async function createNpmManager() {
         console.warn("⚠️  install error")
         Deno.exit(1)
       }
+    },
+    isInstalled(packageName: string): boolean {
+      return packageName in (packageJson.dependencies ?? {})
     },
   }
 }
