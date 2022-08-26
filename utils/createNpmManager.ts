@@ -20,7 +20,11 @@ export async function createNpmManager() {
   console.log(`${packageType} mode`)
 
   return {
-    async installPackage(packagesWithFalsy: (string | false)[]) {
+    /** パッケージがinstallされているか検証 */
+    isInstalled(packageName: string): boolean {
+      return packageName in (packageJson.dependencies ?? {})
+    },
+    async install(...packagesWithFalsy: (string | false)[]) {
       const packages = packagesWithFalsy.filter((it): it is string => typeof it === "string")
       const cmd = packageType === "yarn" ? ["yarn", "add", "-D", ...packages] : ["npm", "i", "-D", ...packages]
       const result = await Deno.run({ cmd }).status()
@@ -29,19 +33,5 @@ export async function createNpmManager() {
         Deno.exit(1)
       }
     },
-    isInstalled(packageName: string): boolean {
-      return packageName in (packageJson.dependencies ?? {})
-    },
   }
 }
-
-// TODO npm scriptsに追加
-/*
-
-type PackageJsonLike = {
-  [x: string]: unknown
-  scripts: Record<string, string>
-}
-const packageJson = JSON.parse(packageJsonText) as PackageJsonLike
-
-*/
