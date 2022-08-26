@@ -1,16 +1,22 @@
 import { createNpmManager } from "./utils/createNpmManager.ts"
 import { exec } from "./utils/exec.ts"
 
-const { install, isInstalled } = await createNpmManager()
+const npmManager = await createNpmManager()
 
-const isInstalledTailwind = isInstalled("tailwindcss")
+const isInstalledTailwind = npmManager.isInstalled("tailwindcss")
 
-await install(
+await npmManager.install(
   "prettier",
   "prettier-plugin-organize-imports",
   "@trivago/prettier-plugin-sort-imports",
   isInstalledTailwind && "prettier-plugin-tailwindcss"
 )
+
+npmManager.editToPackageJson({
+  scripts: {
+    format: `prettier --write .`,
+  },
+})
 
 /** boolがfalseの時は`// `が付与される */
 function maybeComment(bool: boolean, source: string) {
