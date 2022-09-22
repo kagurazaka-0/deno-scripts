@@ -1,5 +1,3 @@
-export {}
-
 // https://twitter.com/Sheeeeepla/status/1554028833942441984?s=20&t=FX1g8oTxTNJ3FDREglglXQ
 
 const DODOSUKO = ["ドド", "スコ"] as const

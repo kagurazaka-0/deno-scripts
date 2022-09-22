@@ -1,5 +1,3 @@
-export {}
-
 const DODOSUKO = ["ドド", "スコ"] as const
 
 type Dodosuko = typeof DODOSUKO[number]
