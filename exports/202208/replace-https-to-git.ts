@@ -1,4 +1,4 @@
-import { exec } from "./utils/exec.ts"
+import { exec } from "../../utils/exec.ts"
 
 const REPLACE_FROM = "https://github.com/"
 const REPLACE_TO = "git@github.com:"

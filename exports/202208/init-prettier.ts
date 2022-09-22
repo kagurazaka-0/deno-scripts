@@ -1,5 +1,5 @@
-import { createNpmManager } from "./utils/createNpmManager.ts"
-import { exec } from "./utils/exec.ts"
+import { createNpmManager } from "../../utils/createNpmManager.ts"
+import { exec } from "../../utils/exec.ts"
 
 const npmManager = await createNpmManager()
 
