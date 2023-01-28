@@ -49,7 +49,7 @@ export async function createNpmManager() {
     async editToPackageJson(obj: Partial<PackageJson>) {
       // NOTE: deepMergeの型バグによりkeyが string のやつが正しく反応しない
       const merged = deepMerge<{}>(packageJson, obj) as PackageJson
-      await Deno.writeTextFile(PACKAGE_JSON_PATH, JSON.stringify(merged))
+      await Deno.writeTextFile(PACKAGE_JSON_PATH, JSON.stringify(merged, null, 2))
       packageJson = merged
     },
   }

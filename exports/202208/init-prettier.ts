@@ -3,25 +3,26 @@ import { exec } from "../../utils/exec.ts"
 
 const npmManager = await createNpmManager()
 
-const isInstalledTailwind = npmManager.isInstalled("tailwindcss")
-
-await npmManager.install(
-  "prettier",
-  "prettier-plugin-organize-imports",
-  "@trivago/prettier-plugin-sort-imports",
-  isInstalledTailwind && "prettier-plugin-tailwindcss"
-)
-
-npmManager.editToPackageJson({
+await npmManager.editToPackageJson({
   scripts: {
     format: `prettier --write .`,
   },
 })
 
-/** boolがfalseの時は`// `が付与される */
-function maybeComment(bool: boolean, source: string) {
+const isInstalledTailwind = npmManager.isInstalled("tailwindcss")
+
+await npmManager.install(
+  "prettier",
+  "prettier-plugin-organize-imports",
+  // "@trivago/prettier-plugin-sort-imports",
+  "@ianvs/prettier-plugin-sort-imports",
+  isInstalledTailwind && "prettier-plugin-tailwindcss"
+)
+
+/** boolがfalseの時はから文字列,trueの時はsourceがreturn */
+function maybeText(bool: boolean, source: string) {
   if (!bool) {
-    return `// ${source}`
+    return ""
   }
   return source
 }
@@ -31,7 +32,7 @@ await Deno.writeTextFile(
   `
 const pluginSortImports = require("@trivago/prettier-plugin-sort-imports")
 const pluginOrganizeImports = require("prettier-plugin-organize-imports")
-${maybeComment(isInstalledTailwind, `const pluginTailwindcss = require("prettier-plugin-tailwindcss")`)}
+${maybeText(isInstalledTailwind, `const pluginTailwindcss = require("prettier-plugin-tailwindcss")`)}
 
 const { parsers: typescriptParsers } = require("prettier/parser-typescript")
 
@@ -48,7 +49,7 @@ const myParser = {
     }
     return it
   },
-  ${maybeComment(isInstalledTailwind, `parse: pluginTailwindcss.parsers.typescript.parse,`)}
+  ${maybeText(isInstalledTailwind, `parse: pluginTailwindcss.parsers.typescript.parse,`)}
 }
 
 /** @type {import("prettier").Plugin}  */
@@ -66,8 +67,11 @@ module.exports = {
   arrowParens: "always",
   importOrder: ["^[~/]", "^[../]", "^[./]"],
   importOrderSeparation: true,
+  trailingComma: "all"
 }
 `
 )
 
-await exec(`npx prettier --write .`)
+if (Deno.args.includes("--format")) {
+  await exec(`npx prettier --write .`)
+}
