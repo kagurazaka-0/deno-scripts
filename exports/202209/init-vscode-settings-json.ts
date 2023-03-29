@@ -16,5 +16,6 @@ if (hasSettingsJson) {
   Deno.exit(0)
 }
 
+await Deno.mkdir("./.vscode")
 await Deno.writeTextFile(TARGET, `{\n}`)
 await openInVSCode()

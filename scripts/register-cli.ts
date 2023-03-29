@@ -20,4 +20,5 @@ for await (const it of walk("./exports")) {
   // NOTE: ./denoはシンボリックリンク
   const text = `#!/usr/bin/env -S deno run --allow-all\nimport "./${path.join("./deno", it.path)}"`
   Deno.writeTextFile(writeTargetPath, text)
+  console.log("✅  " + scriptName)
 }
