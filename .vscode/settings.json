@@ -8,5 +8,6 @@
   },
   "search.exclude": {
     "exports/2022*": false
-  }
+  },
+  "typescript.referencesCodeLens.enabled": false
 }
