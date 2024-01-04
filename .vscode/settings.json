@@ -4,7 +4,8 @@
     "Dodosuko"
   ],
   "files.exclude": {
-    "exports/2022*": true
+    "exports/2022*": true,
+    "dodosuko": true
   },
   "search.exclude": {
     "exports/2022*": false

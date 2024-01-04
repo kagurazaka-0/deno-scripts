@@ -10,10 +10,11 @@ await npmManager.editToPackageJson({
 })
 
 const isInstalledTailwind = npmManager.isInstalled("tailwindcss")
+const isUseOrganizeImports = false
 
 await npmManager.install(
   "prettier",
-  "prettier-plugin-organize-imports",
+  isUseOrganizeImports && "prettier-plugin-organize-imports",
   // "@trivago/prettier-plugin-sort-imports",
   "@ianvs/prettier-plugin-sort-imports",
   isInstalledTailwind && "prettier-plugin-tailwindcss"
@@ -31,7 +32,7 @@ await Deno.writeTextFile(
   "./prettier.config.js",
   `
 const pluginSortImports = require("@trivago/prettier-plugin-sort-imports")
-const pluginOrganizeImports = require("prettier-plugin-organize-imports")
+${maybeText(isUseOrganizeImports, `const pluginOrganizeImports = require("prettier-plugin-organize-imports")`)}
 ${maybeText(isInstalledTailwind, `const pluginTailwindcss = require("prettier-plugin-tailwindcss")`)}
 
 const { parsers: typescriptParsers } = require("prettier/parser-typescript")

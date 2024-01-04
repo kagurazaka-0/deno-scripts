@@ -4,6 +4,8 @@ import * as path from "https://deno.land/std@0.142.0/path/mod.ts"
 
 import "https://deno.land/x/dotenv@v3.2.0/load.ts"
 
+import { pipeInto } from "https://esm.sh/ts-functional-pipe@3.1.2"
+
 const BIN_PATH = Deno.env.get("BIN_PATH")
 assert(BIN_PATH, `BIN_PATH is not define from '.env'.`)
 
